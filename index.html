@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia | Inventário Diário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Stone, Amber/Orange) -->
+    <!-- Application Structure Plan: A single-page application with a fixed navigation menu. The page is divided into two main sections: "Compras Nacionais" and "Compras Importadas". All content is immediately visible, providing a static, easy-to-read document format. This design is ideal for printing or quick linear reading without any interactive elements to hide information. -->
+    <!-- Visualization & Content Choices: Report Info: SOP for National and Imported Purchases -> Goal: Organize & Detail -> Viz/Presentation: Plain text, detailed lists, flowcharts -> Interaction: Smooth scrolling navigation -> Justification: This design simplifies the user experience by presenting all information upfront. It removes complex interactions, making the document universally accessible and easy to navigate in a linear fashion, ideal for training or reference in any environment. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-stone-200">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-lg font-bold text-stone-700">Inventário Diário</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Visão Geral</a>
+                        <a href="#audio-guide" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Áudio Guia</a>
+                        <a href="#responsabilidade" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Responsabilidade</a>
+                        <a href="#frequencia" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Frequência</a>
+                        <a href="#comunicacao" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Comunicação</a>
+                        <a href="#registro" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Registro</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="overview" class="text-center mb-16 p-6 bg-white rounded-lg shadow-sm border border-stone-200">
+            <h2 class="text-3xl font-bold tracking-tight text-amber-700 sm:text-4xl">Procedimento de Inventário Diário</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">Este guia padroniza o processo de validação e inventário diário nos depósitos INB.AT e OP.AT.</p>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <h3 class="text-xl font-semibold text-stone-800">🎯 Objetivo</h3>
+                    <p class="mt-2 text-stone-600">Garantir <strong>'Entrada OK'</strong> e <strong>'Saída OK'</strong> diariamente, por meio de um acompanhamento rigoroso dos saldos.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <h3 class="text-xl font-semibold text-stone-800">👤 Responsável</h3>
+                    <p class="mt-2 text-stone-600">O <strong>Setor de Almoxarifado</strong> é o único responsável pela execução deste procedimento.</p>
+                </div>
+            </div>
+        </section>
+        
+        <hr class="border-stone-200 my-16">
+
+        <section id="audio-guide" class="text-center mb-16 p-6 bg-white rounded-lg shadow-sm border border-stone-200">
+            <h2 class="text-3xl font-bold tracking-tight text-amber-700 sm:text-4xl">Áudio Guia do Procedimento</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">Ouça o procedimento completo clicando no botão `Play`.</p>
+            <div class="mt-8 flex justify-center">
+                <audio controls class="w-full max-w-lg">
+                    <source src="procedimento-inventario-op-at-inb-at.mp3" type="audio/mpeg">
+                    O seu navegador não suporta o elemento de áudio.
+                </audio>
+            </div>
+        </section>
+
+        <hr class="border-stone-200 my-16">
+
+        <section id="responsabilidade" class="bg-white rounded-lg shadow-sm border border-stone-200 p-6 mb-8">
+            <h2 class="text-2xl font-bold text-amber-700">1. Responsabilidade do Almoxarifado</h2>
+            <p class="mt-4 text-stone-600">Fica sob responsabilidade do setor de almoxarifado realizar:</p>
+            <ul class="mt-2 text-stone-600 list-disc list-inside space-y-1">
+                <li>Contagem física e sistêmica dos depósitos INB.AT e OP.AT.</li>
+                <li>Validação diária das movimentações de entrada e saída em ambos os depósitos.</li>
+                <li>Acompanhamento rigoroso dos saldos, garantindo que os dados físicos e sistêmicos estejam sempre coerentes.</li>
+            </ul>
+            <p class="mt-4 text-stone-600"><strong>INB.AT</strong> = Área de recebimento de compras</p>
+            <p class="text-stone-600"><strong>OP.AT</strong> = Área de separação para Ordens de Produção</p>
+        </section>
+
+        <section id="frequencia" class="bg-white rounded-lg shadow-sm border border-stone-200 p-6 mb-8">
+            <h2 class="text-2xl font-bold text-amber-700">2. Frequência dos Inventários</h2>
+            <p class="mt-4 text-stone-600">Os inventários deverão ser realizados duas vezes ao dia:</p>
+            <ul class="mt-2 text-stone-600 list-disc list-inside space-y-1">
+                <li><strong>No início do turno:</strong> Para confirmar os saldos deixados pelo turno anterior.</li>
+                <li><strong>No final do turno:</strong> Para validar todas as movimentações ocorridas durante o período.</li>
+            </ul>
+        </section>
+
+        <section id="comunicacao" class="bg-white rounded-lg shadow-sm border border-stone-200 p-6 mb-8">
+            <h2 class="text-2xl font-bold text-amber-700">3. Comunicação de Divergência</h2>
+            <p class="mt-4 text-stone-600">Em caso de divergência entre o físico e o sistema, é obrigatório:</p>
+            <ul class="mt-2 text-stone-600 list-disc list-inside space-y-1">
+                <li>Comunicar imediatamente a liderança do setor ou o responsável pelo inventário.</li>
+                <li>Não realizar movimentações até que a divergência seja validada e registrada corretamente.</li>
+            </ul>
+        </section>
+
+        <section id="registro" class="bg-white rounded-lg shadow-sm border border-stone-200 p-6 mb-8">
+            <h2 class="text-2xl font-bold text-amber-700">4. Registro dos Inventários</h2>
+            <p class="mt-4 text-stone-600">Todos os inventários (início e fim de turno) devem ser registrados em planilha de controle. A planilha deverá conter:</p>
+            <ul class="mt-2 text-stone-600 list-disc list-inside space-y-1">
+                <li>Data e horário da contagem.</li>
+                <li>Nome do responsável.</li>
+                <li>Saldo físico x saldo sistêmico.</li>
+                <li>Observações em caso de divergência.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-800 text-white">
+        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>&copy; 2025 | Guia de Procedimentos. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
