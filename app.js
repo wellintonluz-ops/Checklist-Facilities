@@ -316,7 +316,13 @@ const fetchHistoryFromFirestore = async () => {
         pending: Array.isArray(data.pending) ? data.pending : [],
       };
     });
-    if (!remoteHistory.length) return;
+    if (!remoteHistory.length) {
+      history = [];
+      saveHistory();
+      if (activeTab === 'history') renderHistory();
+      setSyncStatus('Histórico limpo na nuvem', 'online');
+      return;
+    }
 
     const merged = [...remoteHistory];
     history.forEach((item) => {
@@ -375,7 +381,15 @@ const fetchStateFromFirestore = async () => {
     if (!doc.exists) return;
     const data = doc.data() || {};
     const remoteSubjects = normalizeState(data.subjects || []);
-    if (!remoteSubjects.length) return;
+    if (!remoteSubjects.length) {
+      if (state.length) {
+        state = [];
+        save();
+        render();
+        setSyncStatus('Checklist limpo pela nuvem', 'online');
+      }
+      return;
+    }
     state = mergeRemoteWithLocalImages(remoteSubjects, state);
     save();
     render();
@@ -400,7 +414,15 @@ const subscribeStateFromFirestore = async () => {
         if (doc.metadata && doc.metadata.hasPendingWrites) return;
         const data = doc.data() || {};
         const remoteSubjects = normalizeState(data.subjects || []);
-        if (!remoteSubjects.length) return;
+        if (!remoteSubjects.length) {
+          if (state.length) {
+            state = [];
+            localStorage.setItem(storageKey, JSON.stringify(state));
+            render();
+            setSyncStatus('Checklist limpo pela nuvem', 'online');
+          }
+          return;
+        }
         // Evita re-render se não houve mudança relevante
         const current = JSON.stringify(state);
         const incoming = JSON.stringify(remoteSubjects);
@@ -482,6 +504,15 @@ const subscribeHistoryFromFirestore = async () => {
             pending: Array.isArray(data.pending) ? data.pending : [],
           };
         });
+        if (!remoteHistory.length) {
+          if (history.length) {
+            history = [];
+            saveHistory();
+            if (activeTab === 'history') renderHistory();
+            setSyncStatus('Histórico limpo pela nuvem', 'online');
+          }
+          return;
+        }
         const merged = [...remoteHistory];
         history.forEach((item) => {
           if (!merged.find((r) => r.id === item.id)) merged.push(item);
