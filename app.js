@@ -564,7 +564,7 @@ if ($loginForm) {
     event.preventDefault();
     const user = ($loginUser?.value || '').trim();
     const pass = ($loginPass?.value || '').trim();
-    if (user === 'wellinton' && pass === 'wellinton7842') {
+    if (user === 'tubrax' && pass === '102030') {
       isLoggedIn = true;
       saveAuth();
       updateAuthUI();
