@@ -1,138 +1,510 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia | Inventário Diário</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals (Stone, Amber/Orange) -->
-    <!-- Application Structure Plan: A single-page application with a fixed navigation menu. The page is divided into two main sections: "Compras Nacionais" and "Compras Importadas". All content is immediately visible, providing a static, easy-to-read document format. This design is ideal for printing or quick linear reading without any interactive elements to hide information. -->
-    <!-- Visualization & Content Choices: Report Info: SOP for National and Imported Purchases -> Goal: Organize & Detail -> Viz/Presentation: Plain text, detailed lists, flowcharts -> Interaction: Smooth scrolling navigation -> Justification: This design simplifies the user experience by presenting all information upfront. It removes complex interactions, making the document universally accessible and easy to navigate in a linear fashion, ideal for training or reference in any environment. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Checklist - Facilities</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--bg: #0b1021;
+			--card: #0f172a;
+			--muted: #8ea0c2;
+			--accent: #0fd3c9;
+			--accent-2: #f6a03c;
+			--stroke: #1c2541;
+			--shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+			--radius: 14px;
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+			color: #f5f7ff;
+			background: radial-gradient(circle at 15% 20%, rgba(15, 211, 201, 0.12), transparent 30%),
+									radial-gradient(circle at 80% 10%, rgba(246, 160, 60, 0.12), transparent 30%),
+									radial-gradient(circle at 70% 70%, rgba(15, 211, 201, 0.08), transparent 35%),
+									#050712;
+		}
+
+		main {
+			max-width: 1100px;
+			margin: 40px auto;
+			padding: 0 20px 60px;
+		}
+
+		.card {
+			background: linear-gradient(145deg, #0d1428, #0a0f1f);
+			border: 1px solid var(--stroke);
+			border-radius: var(--radius);
+			box-shadow: var(--shadow);
+			padding: 26px;
+		}
+
+		.header {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 16px;
+			justify-content: space-between;
+			margin-bottom: 20px;
+		}
+
+		.sync-status {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 12px;
+			border-radius: 12px;
+			border: 1px solid var(--stroke);
+			background: rgba(255, 255, 255, 0.04);
+			color: #d9e2ff;
+			font-size: 14px;
+		}
+
+		.sync-status::before {
+			content: '';
+			width: 10px;
+			height: 10px;
+			border-radius: 999px;
+			background: var(--muted);
+			box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.03);
+		}
+
+		.sync-status[data-state="online"]::before { background: #33f0c3; box-shadow: 0 0 0 6px rgba(51, 240, 195, 0.14); }
+		.sync-status[data-state="syncing"]::before { background: #f6a03c; box-shadow: 0 0 0 6px rgba(246, 160, 60, 0.14); }
+		.sync-status[data-state="error"]::before { background: #ff6b6b; box-shadow: 0 0 0 6px rgba(255, 107, 107, 0.14); }
+
+		.header-actions {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 28px;
+			letter-spacing: 0.3px;
+		}
+
+		.muted { color: var(--muted); }
+
+		.hint {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			padding: 10px 14px;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.04);
+			border: 1px solid var(--stroke);
+			color: #d9e2ff;
+			font-size: 14px;
+		}
+
+		.pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 14px;
+			border-radius: 10px;
+			border: 1px dashed var(--stroke);
+			color: #d9e2ff;
+			font-size: 14px;
+			margin-bottom: 12px;
+		}
+
+		.tabs {
+			display: flex;
+			gap: 10px;
+			margin: 12px 0 16px;
+			flex-wrap: wrap;
+		}
+
+		.tab-btn {
+			background: rgba(255, 255, 255, 0.05);
+			border: 1px solid var(--stroke);
+			color: #e9eeff;
+			padding: 10px 14px;
+			border-radius: 10px;
+			cursor: pointer;
+			font-weight: 600;
+			transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+		}
+
+		.tab-btn.active {
+			background: linear-gradient(135deg, rgba(15, 211, 201, 0.25), rgba(246, 160, 60, 0.2));
+			border-color: rgba(15, 211, 201, 0.6);
+			transform: translateY(-1px);
+		}
+
+		.tab-panel { display: none; }
+		.tab-panel.active { display: block; }
+
+		form.add-subject {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 12px;
+			margin-top: 14px;
+		}
+
+		.input {
+			width: 100%;
+			padding: 12px 14px;
+			border-radius: 10px;
+			border: 1px solid var(--stroke);
+			background: rgba(255, 255, 255, 0.03);
+			color: #f5f7ff;
+			font-size: 15px;
+		}
+
+		.btn {
+			border: none;
+			cursor: pointer;
+			padding: 12px 16px;
+			border-radius: 10px;
+			font-weight: 600;
+			letter-spacing: 0.2px;
+			transition: transform 120ms ease, box-shadow 180ms ease, background 200ms ease;
+		}
+
+		.btn-primary {
+			background: linear-gradient(135deg, var(--accent), #0aa59d);
+			color: #041017;
+			box-shadow: 0 8px 24px rgba(15, 211, 201, 0.25);
+		}
+
+		.btn-secondary {
+			background: rgba(255, 255, 255, 0.06);
+			color: #f5f7ff;
+			border: 1px solid var(--stroke);
+		}
+
+		.btn:hover { transform: translateY(-1px); }
+
+		.subjects {
+			display: grid;
+			gap: 16px;
+			margin-top: 18px;
+		}
+
+		.subject {
+			border: 1px solid var(--stroke);
+			border-radius: var(--radius);
+			padding: 18px;
+			background: rgba(255, 255, 255, 0.02);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.subject::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			background: radial-gradient(400px circle at var(--glow-x, 0%) var(--glow-y, 0%), rgba(15, 211, 201, 0.08), transparent 50%);
+			transition: opacity 180ms ease;
+			opacity: 0;
+		}
+
+		.subject:hover::before { opacity: 1; }
+
+		.subject-header {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			justify-content: space-between;
+			flex-wrap: wrap;
+		}
+
+		.subject h2 {
+			margin: 0;
+			font-size: 20px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.badge {
+			padding: 6px 10px;
+			border-radius: 8px;
+			background: rgba(15, 211, 201, 0.12);
+			color: #8bf1eb;
+			border: 1px solid rgba(15, 211, 201, 0.4);
+			font-size: 13px;
+		}
+
+		.progress {
+			width: 200px;
+			height: 8px;
+			border-radius: 999px;
+			background: #0a101f;
+			border: 1px solid var(--stroke);
+			overflow: hidden;
+		}
+
+		.progress span {
+			display: block;
+			height: 100%;
+			width: 0;
+			background: linear-gradient(90deg, var(--accent), var(--accent-2));
+			transition: width 180ms ease;
+		}
+
+		.topics { list-style: none; padding: 0; margin: 14px 0 10px; display: grid; gap: 10px; }
+
+		.topic {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 10px;
+			align-items: center;
+			padding: 12px 14px;
+			border-radius: 10px;
+			background: rgba(255, 255, 255, 0.03);
+			border: 1px solid rgba(255, 255, 255, 0.04);
+		}
+
+		.topic label {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			cursor: pointer;
+			color: #e5ecff;
+		}
+
+		.topic input[type="checkbox"] {
+			width: 18px;
+			height: 18px;
+			accent-color: var(--accent);
+			cursor: pointer;
+		}
+
+		.topic.done { color: var(--muted); text-decoration: line-through; }
+
+		.topic-actions {
+			display: flex;
+			gap: 8px;
+			justify-content: flex-end;
+			flex-wrap: wrap;
+		}
+
+		.topic-actions .btn,
+		.topic-image-actions .btn {
+			padding: 10px 12px;
+			font-size: 14px;
+		}
+
+		.btn-ghost {
+			background: rgba(255, 255, 255, 0.04);
+			border: 1px dashed var(--stroke);
+			box-shadow: none;
+		}
+
+		.topic-image {
+			grid-column: 1 / -1;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-top: 8px;
+			padding: 10px 12px;
+			border-radius: 10px;
+			border: 1px solid rgba(255, 255, 255, 0.05);
+			background: rgba(255, 255, 255, 0.03);
+		}
+
+		.topic-image img {
+			width: 78px;
+			height: 78px;
+			object-fit: cover;
+			border-radius: 10px;
+			border: 1px solid var(--stroke);
+		}
+
+		.topic-image-actions {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+		}
+
+		.add-topic {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 10px;
+			margin-top: 8px;
+		}
+
+		.empty {
+			padding: 12px;
+			color: var(--muted);
+			border: 1px dashed var(--stroke);
+			border-radius: 10px;
+			background: rgba(255, 255, 255, 0.02);
+		}
+
+		.history-list { display: grid; gap: 12px; }
+		.history-entry {
+			border: 1px solid var(--stroke);
+			border-radius: var(--radius);
+			padding: 14px;
+			background: rgba(255, 255, 255, 0.02);
+			box-shadow: var(--shadow);
+		}
+		.history-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+		h3 { margin: 0; font-size: 18px; }
+		.history-subjects { display: grid; gap: 10px; }
+		.history-subject { border: 1px dashed var(--stroke); border-radius: 10px; padding: 10px 12px; background: rgba(255, 255, 255, 0.02); }
+		.history-subject-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+		.history-subject h4 { margin: 0; font-size: 16px; }
+		.history-topics { list-style: none; padding-left: 0; margin: 0; display: grid; gap: 6px; }
+		.history-topics li { padding: 6px 8px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); }
+		.history-topics li.done { color: var(--muted); text-decoration: line-through; }
+		.history-empty { padding: 12px; color: var(--muted); border: 1px dashed var(--stroke); border-radius: 10px; background: rgba(255, 255, 255, 0.02); margin-bottom: 10px; }
+		.history-toggle { border: none; background: transparent; color: var(--accent); cursor: pointer; font-weight: 600; padding: 6px 10px; border-radius: 8px; }
+		.history-toggle:hover { background: rgba(255, 255, 255, 0.04); }
+		.history-details { display: none; margin-top: 10px; }
+		.history-entry.open .history-details { display: block; }
+
+		.auth-panel {
+			display: none;
+			position: fixed;
+			top: 90px;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 999;
+			gap: 8px;
+			width: min(520px, calc(100% - 40px));
+			padding: 16px;
+			border: 1px solid var(--stroke);
+			border-radius: 12px;
+			background: #0f172a;
+			box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+		}
+
+		.auth-panel.open { display: grid; }
+
+		.auth-panel form {
+			display: grid;
+			grid-template-columns: 1fr 1fr auto;
+			gap: 10px;
+		}
+
+		.auth-panel small { color: var(--muted); }
+
+		@media (max-width: 640px) {
+			.auth-panel form { grid-template-columns: 1fr; }
+		}
+
+		.image-modal {
+			position: fixed;
+			inset: 0;
+			background: rgba(0, 0, 0, 0.6);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+			z-index: 999;
+		}
+
+		.image-modal.active { display: flex; }
+
+		.image-modal-content {
+			background: #0f172a;
+			border: 1px solid var(--stroke);
+			border-radius: var(--radius);
+			box-shadow: var(--shadow);
+			max-width: min(90vw, 900px);
+			max-height: 90vh;
+			padding: 12px;
+			display: grid;
+			gap: 10px;
+		}
+
+		.image-modal-content img { max-width: 100%; max-height: 80vh; border-radius: 10px; border: 1px solid var(--stroke); object-fit: contain; }
+
+		.image-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+		@media (max-width: 640px) {
+			.header { flex-direction: column; align-items: flex-start; }
+			form.add-subject { grid-template-columns: 1fr; }
+			.subject-header { flex-direction: column; align-items: flex-start; }
+			.progress { width: 100%; }
+			.topic { grid-template-columns: 1fr; }
+			.add-topic { grid-template-columns: 1fr; }
+		}
+	</style>
 </head>
-<body class="bg-stone-50 text-stone-800">
+<body>
+	<main>
+		<div class="card">
+			<div class="header">
+					<div>
+						<h1>Checklist - Facilities</h1>
+						<div class="muted">Organize itens por categoria e acompanhe o progresso.</div>
+					</div>
+				<div class="header-actions">
+					<div class="sync-status" id="sync-status" data-state="syncing">Conectando...</div>
+					<div class="hint">Ctrl/Cmd + S: tudo fica salvo localmente</div>
+					<button class="btn btn-secondary" id="login-btn" type="button">Login</button>
+					<button class="btn btn-secondary btn-ghost" id="logout-btn" type="button">Sair</button>
+						<button class="btn btn-secondary" id="reset-all" type="button">Resetar dados</button>
+					<button class="btn btn-primary" id="save-day" type="button">Salvar checklist do dia</button>
+				</div>
+			</div>
 
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-stone-200">
-        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0">
-                    <h1 class="text-lg font-bold text-stone-700">Inventário Diário</h1>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#overview" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Visão Geral</a>
-                        <a href="#audio-guide" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Áudio Guia</a>
-                        <a href="#responsabilidade" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Responsabilidade</a>
-                        <a href="#frequencia" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Frequência</a>
-                        <a href="#comunicacao" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Comunicação</a>
-                        <a href="#registro" class="text-stone-600 hover:bg-stone-200 hover:text-stone-900 px-3 py-2 rounded-md text-sm font-medium">Registro</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+			<div class="tabs" role="tablist">
+				<button class="tab-btn active" data-tab="current" type="button">Checklist</button>
+				<button class="tab-btn" data-tab="history" type="button">Histórico</button>
+			</div>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+			<div class="tab-panel active" data-panel="current">
+				<div id="create-section">
+					<div class="pill">Adicionar novo assunto</div>
+					<form class="add-subject" id="subject-form">
+						<input class="input" name="subject" placeholder="Ex.: Viagem, Reunião, Compras" required>
+						<button class="btn btn-primary" type="submit">Criar assunto</button>
+					</form>
+				</div>
 
-        <section id="overview" class="text-center mb-16 p-6 bg-white rounded-lg shadow-sm border border-stone-200">
-            <h2 class="text-3xl font-bold tracking-tight text-amber-700 sm:text-4xl">Procedimento de Inventário Diário</h2>
-            <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">Este guia padroniza o processo de validação e inventário diário nos depósitos INB.AT e OP.AT.</p>
-            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
-                    <h3 class="text-xl font-semibold text-stone-800">🎯 Objetivo</h3>
-                    <p class="mt-2 text-stone-600">Garantir <strong>'Entrada OK'</strong> e <strong>'Saída OK'</strong> diariamente, por meio de um acompanhamento rigoroso dos saldos.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
-                    <h3 class="text-xl font-semibold text-stone-800">👤 Responsável</h3>
-                    <p class="mt-2 text-stone-600">O <strong>Setor de Almoxarifado</strong> é o único responsável pela execução deste procedimento.</p>
-                </div>
-            </div>
-        </section>
-        
-        <hr class="border-stone-200 my-16">
+				<div class="subjects" id="subjects"></div>
 
-        <section id="audio-guide" class="text-center mb-16 p-6 bg-white rounded-lg shadow-sm border border-stone-200">
-            <h2 class="text-3xl font-bold tracking-tight text-amber-700 sm:text-4xl">Áudio Guia do Procedimento</h2>
-            <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">Ouça o procedimento completo clicando no botão `Play`.</p>
-            <div class="mt-8 flex justify-center">
-                <audio controls class="w-full max-w-lg">
-                    <source src="procedimento-inventario-op-at-inb-at.mp3" type="audio/mpeg">
-                    O seu navegador não suporta o elemento de áudio.
-                </audio>
-            </div>
-        </section>
+				<input type="file" id="image-input" accept="image/*" capture="environment" hidden>
+			</div>
 
-        <hr class="border-stone-200 my-16">
+			<div class="tab-panel" data-panel="history">
+				<div class="history-empty" id="history-empty">Nenhum histórico salvo ainda.</div>
+				<div class="history-list" id="history-list"></div>
+			</div>
+		</div>
+	</main>
 
-        <section id="responsabilidade" class="bg-white rounded-lg shadow-sm border border-stone-200 p-6 mb-8">
-            <h2 class="text-2xl font-bold text-amber-700">1. Responsabilidade do Almoxarifado</h2>
-            <p class="mt-4 text-stone-600">Fica sob responsabilidade do setor de almoxarifado realizar:</p>
-            <ul class="mt-2 text-stone-600 list-disc list-inside space-y-1">
-                <li>Contagem física e sistêmica dos depósitos INB.AT e OP.AT.</li>
-                <li>Validação diária das movimentações de entrada e saída em ambos os depósitos.</li>
-                <li>Acompanhamento rigoroso dos saldos, garantindo que os dados físicos e sistêmicos estejam sempre coerentes.</li>
-            </ul>
-            <p class="mt-4 text-stone-600"><strong>INB.AT</strong> = Área de recebimento de compras</p>
-            <p class="text-stone-600"><strong>OP.AT</strong> = Área de separação para Ordens de Produção</p>
-        </section>
+	<div class="auth-panel" id="login-panel">
+		<div><strong>Login</strong> <small>(necessário para criar assunto)</small></div>
+		<form id="login-form">
+			<input class="input" id="login-user" name="user" placeholder="Usuário" autocomplete="username">
+			<input class="input" id="login-pass" name="pass" placeholder="Senha" type="password" autocomplete="current-password">
+			<button class="btn btn-secondary" type="submit">Entrar</button>
+		</form>
+		<div id="login-status" class="muted">Deslogado</div>
+	</div>
 
-        <section id="frequencia" class="bg-white rounded-lg shadow-sm border border-stone-200 p-6 mb-8">
-            <h2 class="text-2xl font-bold text-amber-700">2. Frequência dos Inventários</h2>
-            <p class="mt-4 text-stone-600">Os inventários deverão ser realizados duas vezes ao dia:</p>
-            <ul class="mt-2 text-stone-600 list-disc list-inside space-y-1">
-                <li><strong>No início do turno:</strong> Para confirmar os saldos deixados pelo turno anterior.</li>
-                <li><strong>No final do turno:</strong> Para validar todas as movimentações ocorridas durante o período.</li>
-            </ul>
-        </section>
+	<div class="image-modal" id="image-modal" aria-modal="true" role="dialog">
+		<div class="image-modal-content">
+			<div class="image-modal-actions">
+				<button class="btn btn-secondary" type="button" id="image-modal-close">Fechar</button>
+			</div>
+			<img id="image-modal-img" alt="Imagem anexada">
+		</div>
+	</div>
 
-        <section id="comunicacao" class="bg-white rounded-lg shadow-sm border border-stone-200 p-6 mb-8">
-            <h2 class="text-2xl font-bold text-amber-700">3. Comunicação de Divergência</h2>
-            <p class="mt-4 text-stone-600">Em caso de divergência entre o físico e o sistema, é obrigatório:</p>
-            <ul class="mt-2 text-stone-600 list-disc list-inside space-y-1">
-                <li>Comunicar imediatamente a liderança do setor ou o responsável pelo inventário.</li>
-                <li>Não realizar movimentações até que a divergência seja validada e registrada corretamente.</li>
-            </ul>
-        </section>
-
-        <section id="registro" class="bg-white rounded-lg shadow-sm border border-stone-200 p-6 mb-8">
-            <h2 class="text-2xl font-bold text-amber-700">4. Registro dos Inventários</h2>
-            <p class="mt-4 text-stone-600">Todos os inventários (início e fim de turno) devem ser registrados em planilha de controle. A planilha deverá conter:</p>
-            <ul class="mt-2 text-stone-600 list-disc list-inside space-y-1">
-                <li>Data e horário da contagem.</li>
-                <li>Nome do responsável.</li>
-                <li>Saldo físico x saldo sistêmico.</li>
-                <li>Observações em caso de divergência.</li>
-            </ul>
-        </section>
-
-    </main>
-
-    <footer class="bg-stone-800 text-white">
-        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm">
-            <p>&copy; 2025 | Guia de Procedimentos. Todos os direitos reservados.</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
-        });
-    </script>
-
+	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+	<script src="app.js?v=2"></script>
 </body>
 </html>
